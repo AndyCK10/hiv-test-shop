@@ -6,8 +6,8 @@
             <span></span>
         </div>
         <div class="nav-menu" id="navMenu">
-            <a href="{{ route('home') }}" class="active">หน้าหลัก</a>
-            <a href="{{ route('questionnaire.show') }}">แบบสอบถาม</a>
+            <a href="{{ route('home') }}" class="@if (in_array(request()->segment(1), [''])) active @endif">หน้าหลัก</a>
+            <a href="{{ route('questionnaire.show') }}" class="@if (in_array(request()->segment(1), ['questionnaire'])) active @endif">แบบสอบถาม</a>
         </div>
         <a href="{{ route('cart.show') }}" class="cart-link">
             🛒
@@ -17,23 +17,4 @@
         </a>
     </div>
 </nav>
-{{-- <script>
-    function toggleMenu() {
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.getElementById('navMenu');
-        
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    }
 
-    $(document).ready(function() {
-        // Close menu when clicking on a link
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                document.querySelector('.hamburger').classList.remove('active');
-                document.getElementById('navMenu').classList.remove('active');
-            });
-        });
-
-    });
-</script> --}}

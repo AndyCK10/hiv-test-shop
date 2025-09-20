@@ -18,7 +18,7 @@
         .hamburger.active span:nth-child(2) { opacity: 0; }
         .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
         .cart-link { background: #3498db; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; position: relative; }
-        .cart-badge { position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .cart-badge { position: absolute; top: -8px; right: -8px; background: #ff0000; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .container { max-width: 800px; margin: 0 auto; padding: 20px; }
         .form-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .header { text-align: center; margin-bottom: 30px; }
@@ -67,27 +67,20 @@
     <style>
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: bold; color: #2c3e50; }
-        input, textarea, select { 
-            /* width: 100%;  */
-            padding: 12px; 
-            border: 1px solid #ddd; 
-            border-radius: 8px; 
-            font-size: 16px; 
-        }
-        input:focus, textarea:focus, select:focus { border-color: #3498db; outline: none; }
-        .question { 
-            margin-bottom: 5px; 
+
+        .question {
+            margin-bottom: 5px;
             /* padding: 20px;  */
-            background: #f8f9fa; 
-            border-radius: 8px; 
+            background: #f8f9fa;
+            border-radius: 8px;
         }
         .question label { font-weight: bold; margin-bottom: 15px; }
-        .radio-group { 
-            /* display: flex; 
+        .radio-group {
+            /* display: flex;
             flex-wrap: wrap;  */
             display: grid;
             grid-template-columns: 1fr;
-            /* gap: 2px; 
+            /* gap: 2px;
             margin-top: 10px;  */
         }
         .radio-group label { font-weight: normal; display: flex; align-items: center; gap: 8px; }
@@ -105,7 +98,8 @@
             .form-container { padding: 20px; }
             .form-group { margin-bottom: 15px; }
             .btn { width: 100%; margin: 10px 0; }
-            .radio-group { flex-direction: column; gap: 10px; }
+            .radio-group { flex-direction: column; }
+            input[type="text"], input[type="tel"]{ width: 100%; }
         }
         @media (max-width: 480px) {
             .header h1 { font-size: 24px; }
@@ -121,11 +115,11 @@
     @include('uc.menu', [
         'cartCount' =>  $cartCount
     ])
-    
+
     <div class="container">
         <div class="form-container">
             <div class="header">
-                <h1>📋 แบบประเมินความเสี่ยงโรคติดต่อทางเพศสัมพันธ์ ด้วยตนเอง</h1>
+                <h1>แบบประเมินความเสี่ยงโรคติดต่อทางเพศสัมพันธ์ ด้วยตนเอง</h1>
                 <p>กรุณาตอบแบบสอบถามเพื่อรับสินค้าฟรี</p>
             </div>
 
@@ -135,13 +129,13 @@
 
             <form method="POST" action="{{ route('questionnaire.store') }}">
                 @csrf
-                @if(isset($productId))
+                {{-- @if(isset($productId))
                     <input type="hidden" name="product_id" value="{{ $productId }}">
-                @endif
-                
+                @endif --}}
+
                 <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
                     <h3 style="margin-bottom: 20px; color: #1976d2;">ข้อมูลส่วนตัว</h3>
-                    
+
                     <div class="form-group">
                         <label>ชื่อ-สกุล *</label>
                         <input type="text" name="name" required onchange="updateProgress()">
@@ -157,7 +151,7 @@
                         <input type="tel" name="phone" required onchange="updateProgress()">
                     </div>
                 </div>
-                
+
                 <h3>แบบประเมินความเสี่ยง</h3>
                 <div class="question">
                     <label>1. ท่านนิยามตนเองว่าเป็นกลุ่มประชากรใด</label>
@@ -283,12 +277,12 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-success">
-                    @if(isset($productId))
+                <button type="submit" class="btn btn-primary">
+                    {{-- @if(isset($productId)) --}}
                         บันทึก
-                    @else
+                    {{-- @else
                         บันทึกและเลือกซื้อสินค้า
-                    @endif
+                    @endif --}}
                 </button>
             </form>
 

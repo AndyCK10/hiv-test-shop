@@ -16,7 +16,7 @@
         .btn { padding: 15px 30px; background: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; width: 100%; }
         .btn:hover { background: #2980b9; }
         .product-info { background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
-        .total { font-size: 24px; font-weight: bold; color: #e74c3c; text-align: center; margin: 20px 0; }
+        .total { font-size: 24px; font-weight: bold; color: #ff0000; text-align: center; margin: 20px 0; }
         .back-link { text-align: center; margin-top: 20px; }
         .back-link a { color: #3498db; text-decoration: none; }
     </style>
@@ -34,7 +34,7 @@
         .btn { padding: 15px 30px; background: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; width: 100%; }
         .btn:hover { background: #2980b9; }
         .product-info { background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
-        .total { font-size: 24px; font-weight: bold; color: #e74c3c; text-align: center; margin: 20px 0; }
+        .total { font-size: 24px; font-weight: bold; color: #ff0000; text-align: center; margin: 20px 0; }
         .back-link { text-align: center; margin-top: 20px; }
         .back-link a { color: #3498db; text-decoration: none; }
     </style>
@@ -66,6 +66,11 @@
                 <div class="form-group">
                     <label>เบอร์โทร *</label>
                     <input type="tel" name="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label>อีเมล *</label>
+                    <input type="email" name="email" required placeholder="example@email.com">
                 </div>
 
                 <div class="form-group">

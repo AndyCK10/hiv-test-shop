@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Admin extends Model
+class Admin extends Authenticatable
 {
+    use Notifiable;
+
     protected $fillable = [
         'username',
         'email',
-        'password',
         'reset_token',
         'reset_token_expires'
     ];
@@ -20,6 +22,15 @@ class Admin extends Model
     ];
 
     protected $casts = [
+        'password' => 'hashed',
         'reset_token_expires' => 'datetime'
     ];
+
+    /**
+     * Set the password attribute with proper hashing
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
 }

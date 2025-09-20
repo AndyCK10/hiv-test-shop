@@ -19,7 +19,7 @@
         .hamburger.active span:nth-child(2) { opacity: 0; }
         .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
         .cart-link { background: #3498db; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; position: relative; }
-        .cart-badge { position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .cart-badge { position: absolute; top: -8px; right: -8px; background: #ff0000; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .product-detail { background: white; border-radius: 10px; padding: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; }
         .product-images { }
@@ -30,7 +30,7 @@
         .additional-images img:hover { border-color: #3498db; }
         .product-info h1 { color: #2c3e50; margin-bottom: 15px; font-size: 32px; }
         .short-desc { color: #666; font-style: italic; margin-bottom: 20px; font-size: 18px; }
-        .price { font-size: 36px; color: #e74c3c; font-weight: bold; margin: 20px 0; }
+        .price { font-size: 36px; color: #ff0000; font-weight: bold; margin: 20px 0; }
         .free-badge { background: #27ae60; color: white; padding: 8px 20px; border-radius: 20px; font-size: 16px; margin-left: 15px; }
         .description { color: #333; margin: 30px 0; line-height: 1.8; font-size: 16px; }
         .btn { padding: 15px 30px; margin: 10px 5px; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; text-decoration: none; display: inline-block; text-align: center; }
@@ -70,13 +70,14 @@
         .main-image { width: 100%; height: 400px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; }
         .no-image { width: 100%; height: 400px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 10px; color: #666; font-size: 18px; }
         .additional-images { display: flex; gap: 10px; flex-wrap: wrap; }
-        .additional-images img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; cursor: pointer; border: 2px solid transparent; }
-        .additional-images img:hover { border-color: #3498db; }
+        .additional-images img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; cursor: pointer; border: 1px solid transparent; }
+        .additional-images img:hover { border-color: #ddd; }
         .product-info h1 { color: #2c3e50; margin-bottom: 15px; font-size: 32px; }
         /* .short-desc { color: #666; font-style: italic; margin-bottom: 20px; font-size: 18px; } */
-        /* .price { font-size: 24px; color: #e74c3c; font-weight: bold; margin: 0.25rem 0; } */
+        /* .price { font-size: 24px; color: #ff0000; font-weight: bold; margin: 0.25rem 0; } */
         /* .free-badge { background: #27ae60; color: white; padding: 8px 20px; border-radius: 20px; font-size: 16px; margin-left: 15px; } */
         .description { color: #333; margin: 30px 0; line-height: 1.8; font-size: 16px; }
+        .description ul li { margin-left: 40px; }
         /* .btn { padding: 15px 30px; margin: 10px 5px; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; text-decoration: none; display: inline-block; text-align: center; }
         .btn-primary { background: #3498db; color: white; }
         .btn-success { background: #27ae60; color: white; }
@@ -91,6 +92,7 @@
             .container { padding: 10px; }
             .product-detail { padding: 20px; }
             .btn { width: 100%; margin: 10px 0; }
+            .description ul li { margin-left: 20px; }
         }
         @media (max-width: 480px) {
             .product-info h1 { font-size: 24px; }
@@ -104,7 +106,7 @@
     @include('uc.menu', [
         'cartCount' =>  $cartCount
     ])
-    
+
     <div class="container">
         <div class="product-detail">
             <div class="product-grid">
@@ -114,7 +116,7 @@
                     @else
                         <div class="no-image">ไม่มีรูปภาพ</div>
                     @endif
-                    
+
                     @if($product->images && count($product->images) > 0)
                         <div class="additional-images">
                             @if($product->image)
@@ -126,46 +128,45 @@
                         </div>
                     @endif
                 </div>
-                
+
                 <div class="product-info">
                     <h1>{{ $product->name }}</h1>
-                    
+
                     @if($product->short_description)
                         <div class="short-desc">{{ $product->short_description }}</div>
                     @endif
-                    
+
                     <div class="price">
                         ฿{{ number_format($product->price) }}
                         @if($product->is_free_available)
                             <span class="free-badge">มีแบบฟรี</span>
                         @endif
                     </div>
-                    
+
                     <div class="actions">
-                        @if($product->is_free_available)
-                            <a href="{{ route('questionnaire.show', ['product_id' => $product->id]) }}" class="btn btn-secondary">
-                                รับฟรี
-                            </a>
-                        @endif
-                        
                         <form method="POST" action="{{ route('cart.add') }}" style="display: inline;">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <button type="submit" class="btn btn-primary">
-                                ซื้อสินค้า (฿{{ number_format($product->price) }})
+                                หยิบใส่ตะกร้า
                             </button>
                         </form>
+                        @if($product->is_free_available)
+                            <a href="{{ route('questionnaire.show', ['product_id' => $product->id]) }}" class="btn btn-secondary">
+                                รับสินค้าฟรี
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
-            
+
             @if($product->description)
                 <div class="description">
                     <h3>รายละเอียดสินค้า</h3>
                     <div>{!! $product->description !!}</div>
                 </div>
             @endif
-            
+
             {{-- <div class="back-link">
                 <a href="{{ route('home') }}">← กลับหน้าหลัก</a>
             </div> --}}

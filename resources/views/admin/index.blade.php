@@ -34,7 +34,7 @@
             <form method="GET" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: end;">
                 <div>
                     <label style="display: block; margin-bottom: 5px; font-weight: bold;">ค้นหา</label>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="ชื่อลูกค้า, เบอร์, สินค้า" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="เลขที่คำสั่งซื้อ, ชื่อลูกค้า, เบอร์, สินค้า" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; width: 200px;">
                 </div>
                 <div>
                     <label style="display: block; margin-bottom: 5px; font-weight: bold;">สถานะ</label>
@@ -55,11 +55,11 @@
                 </div>
                 <div>
                     <label style="display: block; margin-bottom: 5px; font-weight: bold;">ตั้งแต่วันที่</label>
-                    <input type="date" name="date_from" value="{{ request('date_from') }}" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                    <input type="date" name="date_from" value="{{ htmlspecialchars(request('date_from')) }}" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
                 </div>
                 <div>
                     <label style="display: block; margin-bottom: 5px; font-weight: bold;">ถึงวันที่</label>
-                    <input type="date" name="date_to" value="{{ request('date_to') }}" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                    <input type="date" name="date_to" value="{{ htmlspecialchars(request('date_to')) }}" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
                 </div>
                 <div>
                     <button type="submit" class="btn btn-primary">ค้นหา</button>
@@ -72,25 +72,25 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th style="width: 200px;">เลขที่คำสั่งซื้อ</th>
                         <th>ลูกค้า</th>
-                        <th>สินค้า</th>
-                        <th>ประเภท</th>
-                        <th>ยอดรวม</th>
-                        <th>สถานะ</th>
-                        <th>วันที่</th>
-                        <th>จัดการ</th>
+                        <th style="width: 200px;">สินค้า</th>
+                        <th style="width: 200px;">ประเภท</th>
+                        <th style="width: 200px;">ยอดรวม</th>
+                        <th style="width: 200px;">สถานะ</th>
+                        <th style="width: 200px;">วันที่</th>
+                        <th style="width: 200px;">จัดการ</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($orders as $order)
                     <tr>
-                        <td>#{{ $order->id }}</td>
+                        <td>#{{ $order->order_no }}</td>
                         <td>
                             <strong>{{ $order->name }}</strong><br>
                             <small>{{ $order->phone }}</small>
                         </td>
-                        <td>{{ $order->product->name }}</td>
+                        <td>{{ $order->product?->name ?? 'N/A' }}</td>
                         <td>
                             @if($order->is_free)
                                 <span class="free-badge">ฟรี</span>

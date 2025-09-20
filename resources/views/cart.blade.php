@@ -17,7 +17,7 @@
         .hamburger.active span:nth-child(2) { opacity: 0; }
         .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
         .cart-link { background: #3498db; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; position: relative; }
-        .cart-badge { position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .cart-badge { position: absolute; top: -8px; right: -8px; background: #ff0000; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         .header { text-align: center; margin-bottom: 30px; }
         .cart-container { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -27,13 +27,13 @@
         .no-image { width: 80px; height: 80px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin-right: 20px; font-size: 12px; color: #666; }
         .item-details { flex: 1; }
         .item-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-        .item-price { color: #e74c3c; font-weight: bold; }
+        .item-price { color: #ff0000; font-weight: bold; }
         .free-badge { background: #27ae60; color: white; padding: 3px 8px; border-radius: 10px; font-size: 12px; margin-left: 10px; }
         .quantity-controls { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
         .qty-btn { width: 30px; height: 30px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 5px; }
-        .remove-btn { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        .remove-btn { background: #ff0000; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
         .total-section { border-top: 2px solid #eee; padding-top: 20px; margin-top: 20px; text-align: right; }
-        .total-price { font-size: 24px; font-weight: bold; color: #e74c3c; margin: 10px 0; }
+        .total-price { font-size: 24px; font-weight: bold; color: #ff0000; margin: 10px 0; }
         .btn { padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; margin: 5px; }
         .btn-primary { background: #3498db; color: white; }
         .btn-success { background: #27ae60; color: white; }
@@ -72,24 +72,24 @@
         .no-image { width: 80px; height: 80px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin-right: 20px; font-size: 12px; color: #666; }
         .item-details { flex: 1; }
         .item-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; color: #2c3e50;}
-        .item-price { color: #e74c3c; font-weight: bold; }
+        .item-price { color: #ff0000; font-weight: bold; }
         .free-badge { background: #27ae60; color: white; padding: 3px 8px; border-radius: 10px; font-size: 12px; margin-left: 10px; }
         .quantity-controls { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
         .qty-btn { width: 30px; height: 30px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 5px; }
-        .remove-btn { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
-        .total-section { border-top: 2px solid #eee; padding-top: 20px; margin-top: 20px; text-align: right; }
-        .total-price { font-size: 24px; font-weight: bold; color: #e74c3c; margin: 10px 0; }
-        /* .btn { padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; margin: 5px; }
-        .btn-primary { background: #3498db; color: white; }
-        .btn-success { background: #27ae60; color: white; }
-        .btn-secondary { background: #6c757d; color: white; } */
+        .qty-btn.disabled { border: 1px solid #ccc; background: white; cursor:unset; }
+        .remove-btn { background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 10px; cursor: pointer; }
+        .disabled-btn { background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 10px; }
+        .total-section { /*border-top: 2px solid #eee;*/ padding-top: 20px; margin-top: 20px; text-align: right; }
+        .total-price { font-size: 24px; font-weight: bold; color: #ff0000; margin: 10px 0; }
         .empty-cart { text-align: center; padding: 50px; color: #666; }
+        .mt-2{margin-top: 1rem;}
         @media (max-width: 768px) {
             .cart-container { padding: 20px; }
             .cart-item { flex-direction: column; text-align: center; }
             .item-image, .no-image { margin: 0 auto 15px; }
             .quantity-controls { justify-content: center; }
             .btn { width: 100%; margin: 5px 0; }
+            .mt-2{margin-top: 1rem;}
         }
         @media (max-width: 480px) {
             .header h1 { font-size: 20px; }
@@ -104,7 +104,7 @@
     @include('uc.menu', [
         'cartCount' =>  $cartCount
     ])
-    
+
     <div class="container">
         <div class="header">
             <h1>🛒 ตะกร้าสินค้า @if($cartCount > 0)({{ $cartCount }} ชิ้น)@endif</h1>
@@ -119,7 +119,7 @@
                     @else
                         <div class="no-image">ไม่มีรูป</div>
                     @endif
-                    
+
                     <div class="item-details">
                         <div class="item-name">
                             <a href="{{ route('product.detail', $item->product->id) }}">{{ $item->product->name }}</a>
@@ -134,12 +134,12 @@
                                 ฿{{ number_format($item->product->price) }}
                             @endif
                         </div>
-                        
+
                         <div class="quantity-controls">
-                            <button class="qty-btn" onclick="updateQuantity({{ $item->id }}, -1)">-</button>
+                            <button @if($item->is_free) class="qty-btn disabled" @disabled(true) @else class="qty-btn" onclick="updateQuantity({{ $item->id }}, -1)" @endif>-</button>
                             <span>{{ $item->quantity }}</span>
-                            <button class="qty-btn" onclick="updateQuantity({{ $item->id }}, 1)">+</button>
-                            <button class="remove-btn" onclick="removeItem({{ $item->id }})">ลบ</button>
+                            <button @if($item->is_free) class="qty-btn disabled" @disabled(true) @else class="qty-btn" onclick="updateQuantity({{ $item->id }}, 1)" @endif>+</button>
+                            <button @if($item->is_free) class="disabled-btn"  @disabled(true) @else class="remove-btn"  onclick="removeItem({{ $item->id }})" @endif>ลบ</button>
                         </div>
                     </div>
                 </div>
@@ -149,17 +149,17 @@
                     <div>ค่าสินค้า: ฿{{ number_format($subtotal) }}</div>
                     <div>ค่าจัดส่ง: ฿{{ number_format($shipping) }}</div>
                     <div class="total-price">รวมทั้งสิ้น: ฿{{ number_format($total) }}</div>
-                    
+
                     <div style="margin-top: 20px;">
                         <a href="{{ route('checkout') }}" class="btn btn-primary">สั่งซื้อ</a>
-                        <a href="{{ route('home') }}" class="btn btn-success">เลือกซื้อต่อ</a>
+                        <a href="{{ route('home') }}" class="btn btn-secondary">เลือกสินค้าต่อ</a>
                     </div>
                 </div>
             @else
                 <div class="empty-cart">
                     <h3>ตะกร้าสินค้าว่าง</h3>
                     <p>ยังไม่มีสินค้าในตะกร้า</p>
-                    <a href="{{ route('home') }}" class="btn btn-primary">เลือกซื้อสินค้า</a>
+                    <a href="{{ route('home') }}" class="btn btn-primary mt-2">เลือกซื้อสินค้า</a>
                 </div>
             @endif
         </div>
@@ -193,7 +193,7 @@
         function toggleMenu() {
             const hamburger = document.querySelector('.hamburger');
             const navMenu = document.getElementById('navMenu');
-            
+
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
         }
@@ -208,5 +208,5 @@
 @endsection
 
 @section('script')
-    
+
 @endsection

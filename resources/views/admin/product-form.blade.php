@@ -1,39 +1,39 @@
 @extends('layouts.authTemplate')
 
 @section('css')
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <style>
-        /* * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f8f9fa; }
-        .header { background: #2c3e50; color: white; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; } */
-        /* .form-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: #2c3e50; }
-        input, textarea, select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
-        input:focus, textarea:focus, select:focus { border-color: #3498db; outline: none; } */
-        /* .btn { padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; margin: 5px; }
-        .btn-primary { background: #3498db; color: white; }
-        .btn-secondary { background: #6c757d; color: white; } */
         .checkbox-group { display: flex; align-items: center; gap: 10px; }
         .checkbox-group input[type="checkbox"] { width: auto; }
         .current-image { max-width: 200px; border-radius: 8px; margin: 10px 0; }
-        #editor { border: 2px solid #ddd; border-radius: 8px; }
-        @media (max-width: 768px) {
-            /* .container { padding: 10px; }
-            .form-container { padding: 20px; }
-            .btn { width: 100%; margin: 10px 0; } */
-            #editor { height: 200px; }
+        #editor { border: 1px solid #ddd; border-top: none; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; min-height: 300px; }
+        .editor-fallback { display: none; }
+        .error-message { color: #dc3545; font-size: 14px; margin-top: 5px; }
+        .loading-editor { padding: 20px; text-align: center; color: #6c757d; }
+
+        .ql-toolbar.ql-snow {
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Kanit', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+            padding: 8px;
+            border-top-right-radius: 8px;
+            border-top-left-radius: 8px;
         }
-        @media (max-width: 480px) {
-            /* .header h1 { font-size: 24px; }
-            input, textarea, select { font-size: 16px; }
-            .current-image { max-width: 150px; } */
+        .ql-container {
+            font-family: var(--var-font-family);
+        }
+        
+        @media (max-width: 768px) {
+            #editor { height: 200px; min-height: 200px; }
+            .current-image { max-width: 150px; }
         }
     </style>
+@endsection
+
 @section('content')
     <!-- Menu -->
     @include('admin.uc.menu-admin', [
-        'title_page' => isset($product) ? '✏️ แก้ไขสินค้า' : '➕ เพิ่มสินค้า'
+        'title_page' => isset($product) ? 'แก้ไขสินค้า' : 'เพิ่มสินค้า'
     ])
 
     <div class="container">
@@ -66,8 +66,13 @@
 
                 <div class="form-group">
                     <label>รายละเอียด</label>
-                    <div id="editor" style="height: 300px;">{{ old('description', $product->description ?? '') }}</div>
-                    <input type="hidden" name="description" id="description">
+                    <div id="editor-container">
+                        <div id="editor" style="height: 300px;">
+                            <div class="loading-editor">กำลังโหลดเครื่องมือแก้ไข...</div>
+                        </div>
+                        <textarea name="description" id="description" class="editor-fallback" rows="10" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px;">{{ old('description', $product->description ?? '') }}</textarea>
+                    </div>
+                    <div id="editor-error" class="error-message"></div>
                 </div>
 
                 <div class="form-group">
@@ -76,7 +81,7 @@
                         <img src="{{ asset('storage/' . $product->image) }}" class="current-image" alt="Current image">
                         <br><small>รูปภาพปัจจุบัน</small><br>
                     @endif
-                    <input type="file" name="image" accept="image/*">
+                    <input type="file" name="image" accept="image/*" style="width: 250px;">
                 </div>
 
                 <div class="form-group">
@@ -89,7 +94,7 @@
                         </div>
                         <small>รูปภาพเพิ่มเติมปัจจุบัน</small><br>
                     @endif
-                    <input type="file" name="images[]" accept="image/*" multiple>
+                    <input type="file" name="images[]" accept="image/*" multiple style="width: 250px;">
                     <small>สามารถเลือกหลายรูปพร้อมกันได้</small>
                 </div>
 
@@ -109,7 +114,7 @@
 
                 <div style="text-align: center;">
                     <button type="submit" class="btn btn-primary">
-                        {{ isset($product) ? '💾 บันทึกการแก้ไข' : '➕ เพิ่มสินค้า' }}
+                        {{ isset($product) ? 'บันทึกการแก้ไข' : 'เพิ่มสินค้า' }}
                     </button>
                     <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">ยกเลิก</a>
                 </div>
@@ -122,21 +127,73 @@
 @section('script')
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <script>
-        var quill = new Quill('#editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    ['bold', 'italic', 'underline'],
-                    [{'list': 'ordered'}, {'list': 'bullet'}],
-                    ['link'],
-                    ['clean']
-                ]
+        document.addEventListener('DOMContentLoaded', function() {
+            let quill = null;
+            let editorInitialized = false;
+            
+            // Initialize Quill editor with error handling
+            try {
+                if (typeof Quill !== 'undefined') {
+                    const initialContent = {!! json_encode(old('description', $product->description ?? '')) !!};
+                    
+                    quill = new Quill('#editor', {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                ['bold', 'italic', 'underline'],
+                                [{'list': 'ordered'}, {'list': 'bullet'}],
+                                ['link'],
+                                ['clean']
+                            ]
+                        }
+                    });
+                    
+                    // Set initial content
+                    if (initialContent) {
+                        quill.root.innerHTML = initialContent;
+                    }
+                    
+                    editorInitialized = true;
+                    document.getElementById('description').style.display = 'none';
+                } else {
+                    throw new Error('Quill library not loaded');
+                }
+            } catch (error) {
+                console.error('Failed to initialize Quill editor:', error);
+                showEditorFallback('ไม่สามารถโหลดเครื่องมือแก้ไขได้ กรุณาใช้ช่องข้อความธรรมดา');
             }
-        });
-
-        // Update hidden input when form is submitted
-        document.querySelector('form').addEventListener('submit', function() {
-            document.getElementById('description').value = quill.root.innerHTML;
+            
+            // Form submission handler with error handling
+            document.querySelector('form').addEventListener('submit', function(e) {
+                try {
+                    if (editorInitialized && quill) {
+                        const content = quill.root.innerHTML;
+                        document.getElementById('description').value = content;
+                    }
+                    // If editor failed, textarea value will be used automatically
+                } catch (error) {
+                    console.error('Error getting editor content:', error);
+                    // Continue with form submission using textarea value
+                }
+            });
+            
+            function showEditorFallback(message) {
+                document.getElementById('editor').style.display = 'none';
+                document.getElementById('description').style.display = 'block';
+                document.getElementById('description').classList.remove('editor-fallback');
+                
+                const errorDiv = document.getElementById('editor-error');
+                if (errorDiv && message) {
+                    errorDiv.textContent = message;
+                }
+            }
+            
+            // Fallback timeout
+            setTimeout(function() {
+                if (!editorInitialized) {
+                    showEditorFallback('เครื่องมือแก้ไขโหลดช้า กรุณาใช้ช่องข้อความธรรมดา');
+                }
+            }, 5000);
         });
     </script>
 @endsection

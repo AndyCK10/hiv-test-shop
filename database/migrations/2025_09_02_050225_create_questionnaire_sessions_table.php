@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('id_card');
             $table->string('phone');
+            $table->string('product_id')->nullable();
             $table->json('answers');
             $table->timestamp('expires_at');
             $table->timestamps();

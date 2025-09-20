@@ -1,7 +1,7 @@
 @extends('layouts.appTemplate')
 
 @section('css')
-    
+
 @endsection
 
 @section('content')
@@ -9,7 +9,7 @@
     @include('uc.menu', [
         'cartCount' =>  $cartCount
     ])
-    
+
     <div class="container">
         {{-- <div class="header">
             <h1>🧪 HIV Self Test Shop</h1>
@@ -25,6 +25,7 @@
             <div class="product">
                 @if($product->image)
                     <img src="{{ asset('storage/' . $product->image) }}" class="product-image" alt="{{ $product->name }}">
+                    {{-- <img src="{{ Storage::url($product->image)) }}" class="product-image" alt="{{ $product->name }}"> --}}
                 @else
                     <div class="no-image">ไม่มีรูปภาพ</div>
                 @endif
@@ -38,26 +39,26 @@
                         <span class="free-badge">มีแบบฟรี</span>
                     @endif
                 </div>
-                
-                @if($product->is_free_available)
-                    <a href="{{ route('questionnaire.show', ['product_id' => $product->id]) }}" class="btn btn-secondary">
-                        รับฟรี
-                    </a>
-                @endif
-                
+
                 <form method="POST" action="{{ route('cart.add') }}" style="display: inline;">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <button type="submit" class="btn btn-primary">
-                        ซื้อสินค้า
+                        หยิบใส่ตะกร้า
                     </button>
                 </form>
+
+                @if($product->is_free_available)
+                    <a href="{{ route('questionnaire.show', ['product_id' => $product->id]) }}" class="btn btn-secondary">
+                        รับสินค้าฟรี
+                    </a>
+                @endif
             </div>
             @endforeach
         </div>
     </div>
 
-    
+
 @endsection
 
 @section('script')
@@ -65,7 +66,7 @@
         function toggleMenu() {
             const hamburger = document.querySelector('.hamburger');
             const navMenu = document.getElementById('navMenu');
-            
+
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
         }

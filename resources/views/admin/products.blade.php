@@ -11,13 +11,13 @@
         .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; margin: 5px; }
         .btn-primary { background: #3498db; color: white; }
         .btn-success { background: #27ae60; color: white; }
-        .btn-danger { background: #e74c3c; color: white; }
-        .logout { color: white; text-decoration: none; padding: 10px 20px; background: #e74c3c; border-radius: 5px; } */
+        .btn-danger { background: #ff0000; color: white; }
+        .logout { color: white; text-decoration: none; padding: 10px 20px; background: #ff0000; border-radius: 5px; } */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .product-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .product-image { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
-        .no-image { width: 100%; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin-bottom: 15px; color: #666; }
-        .price { font-size: 24px; font-weight: bold; color: #e74c3c; margin: 10px 0; }
+        .product-image { width: 100%; max-height: 270px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
+        .no-image { width: 100%; height: 270px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin-bottom: 15px; color: #666; }
+        .price { font-size: 24px; font-weight: bold; color: #ff0000; margin: 10px 0; }
         .free-badge { background: #27ae60; color: white; padding: 3px 8px; border-radius: 10px; font-size: 12px; margin-left: 10px; }
     </style>
 @endsection
@@ -31,9 +31,6 @@
     <div class="container">
         <div class="nav-links">
             <a href="{{ route('admin.dashboard') }}">แดชบอร์ด</a> > จัดการสินค้า
-        </div>
-        <div>
-            <a href="{{ route('admin.products.create') }}" class="btn btn-success">+ เพิ่มสินค้า</a>
         </div>
 
         <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -61,6 +58,7 @@
                 <div>
                     <button type="submit" class="btn btn-primary">ค้นหา</button>
                     <a href="{{ route('admin.products.index') }}" class="btn" style="background: #6c757d; color: white;">ล้าง</a>
+                    <a href="{{ route('admin.products.create') }}" class="btn btn-success">+ เพิ่มสินค้า</a>
                 </div>
             </form>
         </div>
@@ -81,7 +79,8 @@
                         <span class="free-badge">มีแบบฟรี</span>
                     @endif
                 </div>
-                <p>{{ Str::limit($product->description, 100) }}</p>
+                <p>{{ Str::limit($product->short_description, 100) }}</p>
+                {{-- <p>{!! $product->description !!}</p> --}}
 
                 <div style="margin-top: 15px;">
                     <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-primary">แก้ไข</a>

@@ -21,7 +21,7 @@
 @section('content')
     <!-- Menu -->
     @include('admin.uc.menu-admin', [
-        'title_page' =>  isset($admin) ? '✏️ แก้ไขแอดมิน' : '➕ เพิ่มแอดมิน'
+        'title_page' =>  isset($admin) ? 'แก้ไขแอดมิน' : 'เพิ่มแอดมิน'
     ])
 
     <div class="container">
@@ -68,7 +68,7 @@
 
                 <div style="text-align: center;">
                     <button type="submit" class="btn btn-primary">
-                        {{ isset($admin) ? '💾 บันทึกการแก้ไข' : '➕ เพิ่มแอดมิน' }}
+                        {{ isset($admin) ? 'บันทึกการแก้ไข' : 'เพิ่มแอดมิน' }}
                     </button>
                     <a href="{{ route('admin.admins.index') }}" class="btn btn-secondary">ยกเลิก</a>
                 </div>

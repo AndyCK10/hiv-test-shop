@@ -16,14 +16,25 @@
         .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #f8f9fa; font-weight: bold; }
+        th { background: #f8f9fa; font-weight: bold; color: #2c3e50; }
         /* .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; margin: 2px; }
         .btn-primary { background: #3498db; color: white; }
         .btn-success { background: #27ae60; color: white; }
-        .btn-danger { background: #e74c3c; color: white; }
-        .logout { color: white; text-decoration: none; padding: 10px 20px; background: #e74c3c; border-radius: 5px; } */
+        .btn-danger { background: #ff0000; color: white; }
+        .logout { color: white; text-decoration: none; padding: 10px 20px; background: #ff0000; border-radius: 5px; } */
         .answers { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .answers:hover { white-space: normal; overflow: visible; }
+
+        .question-body {margin-bottom: 0.5rem; overflow-y: scroll; height: 50vh;}
+        .question-capsule {margin-bottom: 0.5rem;}
+        .question-capsule .ques {
+            color: #666;
+            font-weight: 500;
+        }
+        .question-capsule .ans {
+            color: #27ae60;
+            padding-left: 1rem;
+        }
 
         @media (max-width: 768px) {
             .container { padding: 10px; }
@@ -53,11 +64,11 @@
                     <div class="stat-label">แบบสอบถามทั้งหมด</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">{{ $questionnaires->where('created_at', '>=', now()->subDays(7))->count() }}</div>
+                    <div class="stat-number">{{ $questionnaires->where('created_at', '>=', Carbon::now()->subDays(7))->count() }}</div>
                     <div class="stat-label">7 วันที่ผ่านมา</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">{{ $questionnaires->where('created_at', '>=', now()->subDays(30))->count() }}</div>
+                    <div class="stat-number">{{ $questionnaires->where('created_at', '>=', Carbon::now()->subDays(30))->count() }}</div>
                     <div class="stat-label">30 วันที่ผ่านมา</div>
                 </div>
             </div>
@@ -133,10 +144,13 @@
 
     <!-- Modal for showing answers -->
     <div id="answerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; max-width: 600px; max-height: 80vh; overflow-y: auto;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 1rem; border-radius: 10px; max-width: 600px; max-height: 80vh; overflow-y: visible;">
             <h3>คำตอบแบบสอบถาม</h3>
             <div id="answerContent"></div>
-            <button onclick="closeModal()" style="margin-top: 20px; padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">ปิด</button>
+            <div style="text-align: center">
+                <button onclick="closeModal()" class="btn btn-primary" style="width: 150px;">ปิด</button>
+            </div>
+
         </div>
     </div>
 
@@ -147,15 +161,27 @@
         const questionnaires = @json($questionnaires);
 
         function showAnswers(id) {
+
             const questionnaire = questionnaires.find(q => q.id === id);
+
             if (!questionnaire) return;
 
-            const answers = JSON.parse(questionnaire.answers);
+            // const answers = JSON.parse(questionnaire.answers);
+            const answers = questionnaire.answers;
+            // console.log(answers);
+
+            // let content = `
+            //     <p><strong>ชื่อ:</strong> ${questionnaire.order ? questionnaire.order.name : '-'}</p>
+            //     <p><strong>เลขบัตรประชาชน:</strong> ${questionnaire.order ? questionnaire.order.id_card : '-'}</p>
+            //     <p><strong>เบอร์โทร:</strong> ${questionnaire.order ? questionnaire.order.phone : '-'}</p>
+            //     <hr style="margin: 15px 0;">
+            // `;
             let content = `
-                <p><strong>ชื่อ:</strong> ${questionnaire.order ? questionnaire.order.name : '-'}</p>
-                <p><strong>เลขบัตรประชาชน:</strong> ${questionnaire.order ? questionnaire.order.id_card : '-'}</p>
-                <p><strong>เบอร์โทร:</strong> ${questionnaire.order ? questionnaire.order.phone : '-'}</p>
+                <p><strong>ชื่อ:</strong> ${questionnaire ? questionnaire.name : '-'}</p>
+                <p><strong>เลขบัตรประชาชน:</strong> ${questionnaire ? questionnaire.id_card : '-'}</p>
+                <p><strong>เบอร์โทร:</strong> ${questionnaire ? questionnaire.phone : '-'}</p>
                 <hr style="margin: 15px 0;">
+                <div class="question-body">
             `;
 
             const questions = {
@@ -174,11 +200,14 @@
                 'q13': 'ท่านรู้จัก ยา PEP หรือไม่'
             };
 
+            let i = 1
             Object.keys(questions).forEach(key => {
                 if (answers[key]) {
-                    content += `<p><strong>${questions[key]}:</strong> ${Array.isArray(answers[key]) ? answers[key].join(', ') : answers[key]}</p>`;
+                    content += `<div class="question-capsule"><div class="ques">${i++} ${questions[key]}:</div>
+                        <div class="ans">${Array.isArray(answers[key]) ? answers[key].join(', ') : answers[key]}</div></div>`;
                 }
             });
+            content += `</div>`;
 
             document.getElementById('answerContent').innerHTML = content;
             document.getElementById('answerModal').style.display = 'block';

@@ -18,7 +18,7 @@
         .hamburger.active span:nth-child(2) { opacity: 0; }
         .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
         .cart-link { background: #3498db; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; position: relative; }
-        .cart-badge { position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .cart-badge { position: absolute; top: -8px; right: -8px; background: #ff0000; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         .checkout-container { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .header { text-align: center; margin-bottom: 30px; }
@@ -62,9 +62,6 @@
         label { display: block; margin-bottom: 8px; font-weight: bold; color: #2c3e50; }
         input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
         input:focus, textarea:focus { border-color: #3498db; outline: none; }
-        /* .btn { padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; margin: 5px; }
-        .btn-success { background: #27ae60; color: white; width: 100%; }
-        .btn-secondary { background: #6c757d; color: white; } */
         .order-summary { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
         .order-item { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .total { font-weight: bold; font-size: 18px; border-top: 1px solid #ddd; padding-top: 10px; }
@@ -86,7 +83,7 @@
     @include('uc.menu', [
         'cartCount' =>  $cartCount
     ])
-    
+
     <div class="container">
         <div class="checkout-container">
             <div class="header">
@@ -126,7 +123,7 @@
 
             <form method="POST" action="{{ route('checkout.process') }}">
                 @csrf
-                
+
                 <div class="form-group">
                     <label>ชื่อ-สกุล *</label>
                     <input type="text" name="name" required>
@@ -138,17 +135,22 @@
                 </div>
 
                 <div class="form-group">
+                    <label>อีเมล *</label>
+                    <input type="email" name="email" required placeholder="example@email.com">
+                </div>
+
+                <div class="form-group">
                     <label>ที่อยู่จัดส่ง *</label>
                     <textarea name="address" rows="4" required placeholder="กรุณากรอกที่อยู่ให้ครบถ้วน เพื่อความถูกต้องในการจัดส่ง"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-primary">
                     ยืนยันคำสั่งซื้อ (฿{{ number_format($total) }})
                 </button>
             </form>
 
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="{{ route('cart.show') }}" style="color: #3498db; text-decoration: none;">← กลับไปแก้ไขตะกร้า</a>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="{{ route('cart.show') }}" style="color: #3498db; text-decoration: none;">กลับไปแก้ไขตะกร้า</a>
             </div>
         </div>
     </div>
@@ -156,5 +158,5 @@
 @endsection
 
 @section('script')
-    
+
 @endsection

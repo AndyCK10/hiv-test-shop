@@ -81,6 +81,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label>อีเมล *</label>
+                    <input type="email" name="email" required placeholder="example@email.com">
+                </div>
+
+                <div class="form-group">
                     <label>ที่อยู่จัดส่ง *</label>
                     <textarea name="address" rows="3" required></textarea>
                 </div>

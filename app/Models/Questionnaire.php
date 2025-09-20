@@ -8,6 +8,9 @@ class Questionnaire extends Model
 {
     protected $fillable = [
         'order_id',
+        'name',
+        'id_card',
+        'phone',
         'answers'
     ];
 

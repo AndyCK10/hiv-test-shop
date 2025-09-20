@@ -7,16 +7,45 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
+        'order_no',
         'product_id',
         'name',
         'id_card',
         'phone',
+        'email',
         'address',
         'is_free',
         'total_amount',
         'status',
-        'payment_method'
+        'payment_method',
+        'payment_slip'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($order) {
+            if (empty($order->order_no)) {
+                $order->order_no = static::generateOrderNumber();
+            }
+        });
+    }
+
+    /**
+     * Generate unique order number with database lock
+     */
+    private static function generateOrderNumber()
+    {
+        return \DB::transaction(function () {
+            $today = today();
+            $count = static::whereDate('created_at', $today)
+                ->lockForUpdate()
+                ->count();
+            
+            return 'ORD' . $today->format('Ymd') . str_pad($count + 1, 4, '0', STR_PAD_LEFT);
+        });
+    }
 
     protected $casts = [
         'total_amount' => 'decimal:2',

@@ -28,16 +28,16 @@
 @section('content')
     <!-- Menu -->
     @include('admin.uc.menu-admin', [
-        'title_page' =>  'รายละเอียดคำสั่งซื้อ #{{ $order->id }}'
+        'title_page' =>  'รายละเอียดคำสั่งซื้อ #'.$order->id
     ])
 
     <div class="container">
         <div class="nav-links">
             <a href="{{ route('admin.dashboard') }}">แดชบอร์ด</a> >
-            <a href="{{ route('admin.dashboard') }}">คำสั่งซื้อ</a> > รายละเอียดคำสั่งซื้อ #{{ $order->id }}
+            <a href="{{ route('admin.dashboard') }}">คำสั่งซื้อ</a> > รายละเอียดคำสั่งซื้อ #{{ $order->order_no }}
         </div>
 
-        <h3>รายละเอียดคำสั่งซื้อ #{{ $order->id }}</h3>
+        <h3>รายละเอียดคำสั่งซื้อ #{{ $order->order_no }}</h3>
         <div class="order-card">
             <div class="order-header">
                 <h2>{{ $order->product->name }}</h2>
@@ -50,6 +50,10 @@
             </div>
 
             <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">เลขที่คำสั่งซื้อ</div>
+                    <div>{{ $order->order_no}}</div>
+                </div>
                 <div class="info-item">
                     <div class="info-label">ชื่อลูกค้า</div>
                     <div>{{ $order->name }}</div>
@@ -76,7 +80,7 @@
                 </div>
                 <div class="info-item">
                     <div class="info-label">ยอดรวม</div>
-                    <div style="font-size: 20px; font-weight: bold; color: #e74c3c;">฿{{ number_format($order->total_amount) }}</div>
+                    <div style="font-size: 20px; font-weight: bold; color: #ff0000;">฿{{ number_format($order->total_amount) }}</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">วันที่สั่ง</div>
@@ -89,20 +93,41 @@
                 <div>{{ $order->address }}</div>
             </div>
 
+            @if($order->payment_slip)
+            <div class="info-item" style="grid-column: 1 / -1;">
+                <div class="info-label">สลิปการชำระเงิน</div>
+                <div style="margin-top: 10px;">
+                    <img src="{{ asset('storage/' . $order->payment_slip) }}" 
+                         alt="Payment Slip" 
+                         style="max-width: 300px; max-height: 400px; border-radius: 8px; border: 1px solid #ddd; cursor: pointer;"
+                         onclick="window.open(this.src, '_blank')">
+                    <p style="margin-top: 5px; color: #666; font-size: 14px;">คลิกเพื่อดูขนาดเต็ม</p>
+                </div>
+            </div>
+            @endif
+
             @if($order->questionnaire)
             <div class="questionnaire">
-                <h3>📋 คำตอบแบบสอบถาม</h3>
+                <h3>คำตอบแบบสอบถาม</h3>
                 @foreach($order->questionnaire->answers as $key => $answer)
                 <div class="question">
                     <strong>
-                        @if($key == 'q1') เพศ:
-                        @elseif($key == 'q2') อายุ:
-                        @elseif($key == 'q3') เหตุผลในการตรวจ:
-                        @elseif($key == 'q4') เคยตรวจมาก่อน:
-                        @elseif($key == 'q5') ความถี่ในการตรวจ:
+                        @if($key == 'q1') ท่านนิยามตนเองว่าเป็นกลุ่มประชากรใด:
+                        @elseif($key == 'q2') ท่านเคยได้รับสิ่งของหรือเงิน เพื่อนำไปสู่การมีเพศสัมพันธ์หรือไม่:
+                        @elseif($key == 'q3') ผลการตรวจเอชไอวี ครั้งล่าสุด:
+                        @elseif($key == 'q4') เพศสัมพันธ์กับคู่นอน ในระยะ 3 เดือนที่ผ่านมา:
+                        @elseif($key == 'q5') บทบาททางเพศ:
+                        @elseif($key == 'q6') ท่านมีเพศสัมพันธ์ครั้งล่าสุดทางช่องทางใด:
+                        @elseif($key == 'q7') การใช้ถุงยางอนามัย ในระยะ 3 เดือนที่ผ่านมา:
+                        @elseif($key == 'q8') ในช่วง 3 เดือนที่ผ่านมาท่านมีเพศสัมพันธ์แบบสอดใส่หรือไม่:
+                        @elseif($key == 'q9') ในระยะ 3 เดือนที่ผ่านมา ท่านเคยใช้สารเสพติด Chemsex หรือไม่:
+                        @elseif($key == 'q10') ท่านเคยใช้เข็มฉีดยาหรือฉีดสารเสพติด ร่วมกับผู้อื่นหรือไม่:
+                        @elseif($key == 'q11') ในระยะ 3 เดือนที่ผ่านมา ท่านมีอาการผิดปกติที่อวัยวะเพศหรือทวารหนักหรือไม่:
+                        @elseif($key == 'q12') ท่านรู้จัก ยา PrEP หรือไม่:
+                        @elseif($key == 'q13') ท่านรู้จัก ยา PEP หรือไม่:
                         @endif
                     </strong>
-                    {{ $answer }}
+                    <span class="success">{{ $answer }}</span>
                 </div>
                 @endforeach
             </div>
@@ -110,12 +135,12 @@
 
             <div style="text-align: center; margin-top: 30px;">
                 @if($order->status == 'pending')
-                    <a href="{{ route('admin.order.confirm', $order->id) }}" class="btn btn-success">✅ ยืนยันคำสั่งซื้อ</a>
+                    <a href="{{ route('admin.order.confirm', $order->id) }}" class="btn btn-success">ยืนยันคำสั่งซื้อ</a>
                 @endif
                 @if($order->status == 'confirmed')
-                    <a href="{{ route('admin.order.complete', $order->id) }}" class="btn btn-primary">📦 ทำเครื่องหมายเสร็จสิ้น</a>
+                    <a href="{{ route('admin.order.complete', $order->id) }}" class="btn btn-primary">ทำเครื่องหมายเสร็จสิ้น</a>
                 @endif
-                <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">← กลับ Dashboard</a>
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">กลับ Dashboard</a>
             </div>
         </div>
     </div>

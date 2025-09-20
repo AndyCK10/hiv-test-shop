@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminController;
@@ -12,6 +13,8 @@ Route::get('/order/paid/{product}', [OrderController::class, 'showPaidForm'])->n
 Route::post('/order/free', [OrderController::class, 'storeFree'])->name('order.store-free');
 Route::post('/order/paid', [OrderController::class, 'storePaid'])->name('order.store-paid');
 Route::get('/payment/{order}', [OrderController::class, 'showPayment'])->name('payment');
+Route::post('/payment/{order}/verify-slip', [OrderController::class, 'verifySlip'])->name('payment.verify-slip');
+Route::post('/payment/{order}/upload-slip', [OrderController::class, 'uploadSlip'])->name('payment.upload-slip');
 Route::get('/payment-success/{order}', [OrderController::class, 'paymentSuccess'])->name('payment.success');
 
 // Admin routes
@@ -40,7 +43,7 @@ Route::middleware(['admin.auth'])->group(function () {
     Route::get('/admin/order/{id}', [AdminController::class, 'showOrder'])->name('admin.order.show');
     Route::get('/admin/order/{id}/confirm', [AdminController::class, 'confirmOrder'])->name('admin.order.confirm');
     Route::get('/admin/order/{id}/complete', [AdminController::class, 'completeOrder'])->name('admin.order.complete');
-    
+
     // Product management
     Route::resource('admin/products', App\Http\Controllers\AdminProductController::class, [
         'names' => [
@@ -53,12 +56,12 @@ Route::middleware(['admin.auth'])->group(function () {
             'destroy' => 'admin.products.destroy'
         ]
     ]);
-    
+
     // Admin profile management
     Route::get('/admin/profile', [AdminController::class, 'showProfile'])->name('admin.profile');
     Route::post('/admin/change-password', [AdminController::class, 'changePassword'])->name('admin.change-password');
     Route::post('/admin/create-admin', [AdminController::class, 'createAdmin'])->name('admin.create-admin');
-    
+
     // Admin management
     Route::resource('admin/admins', App\Http\Controllers\AdminManagementController::class, [
         'names' => [
@@ -71,7 +74,28 @@ Route::middleware(['admin.auth'])->group(function () {
             'destroy' => 'admin.admins.destroy'
         ]
     ]);
-    
+
     // Questionnaire report
     Route::get('/admin/questionnaire-report', [AdminController::class, 'questionnaireReport'])->name('admin.questionnaire.report');
 });
+
+// Route::get('storage/products/{filename}', function ($filename)
+// {
+//     try {
+//         // if (Storage::exists("products/".$filename)) {
+//         //     $file = Storage::get("products/".$filename);
+//         //     // return response($file, 200)->header('Content-Type', 'image/jpeg');
+//         // }else{
+//         //     $file = Storage::get("default_cover.png");
+//         //     // return response($file, 200)->header('Content-Type', 'image/jpeg');
+//         // }
+//         $path = "products/".$filename;
+//         if (!Storage::exists($path)) {
+//             abort(404);
+//         }
+//         return response(Storage::get($path), 200)
+//         ->header("Content-Type", Storage::mimeType($path));
+//     } catch (\Throwable $th) {
+//         abort(404);
+//     }
+// });

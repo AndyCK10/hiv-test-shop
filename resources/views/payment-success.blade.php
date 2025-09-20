@@ -12,7 +12,7 @@
         .success-title { font-size: 32px; color: #27ae60; margin-bottom: 15px; font-weight: bold; }
         .order-details { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: left; }
         .detail-row { display: flex; justify-content: space-between; margin: 10px 0; }
-        .amount { font-size: 24px; font-weight: bold; color: #e74c3c; }
+        .amount { font-size: 24px; font-weight: bold; color: #ff0000; }
         .btn { padding: 15px 30px; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; margin: 10px; font-weight: bold; }
         .btn-primary { background: #3498db; color: white; }
         .btn-success { background: #27ae60; color: white; }
@@ -35,7 +35,7 @@
         .success-title { font-size: 32px; color: #27ae60; margin-bottom: 15px; font-weight: bold; }
         .order-details { background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: left; }
         .detail-row { display: flex; justify-content: space-between; margin: 10px 0; }
-        .amount { font-size: 24px; font-weight: bold; color: #e74c3c; }
+        .amount { font-size: 24px; font-weight: bold; color: #ff0000; }
         /* .btn { padding: 15px 30px; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; margin: 10px; font-weight: bold; }
         .btn-primary { background: #3498db; color: white; }
         .btn-success { background: #27ae60; color: white; } */
@@ -63,7 +63,7 @@
             <h3>รายละเอียดคำสั่งซื้อ</h3>
             <div class="detail-row">
                 <span>เลขที่คำสั่งซื้อ:</span>
-                <strong>#{{ $order->id }}</strong>
+                <strong>#{{ $order->order_no }}</strong>
             </div>
             <div class="detail-row">
                 <span>สินค้า:</span>
@@ -108,28 +108,18 @@
 
         <div>
             {{-- <a href="{{ route('home') }}" class="btn btn-primary">🏠 กลับหน้าแรก</a> --}}
-            <a href="{{ route('home') }}" class="btn btn-success">สั่งซื้อเพิ่ม</a>
+            <a href="{{ route('home') }}" class="btn btn-primary">สั่งซื้อเพิ่ม</a>
         </div>
 
         <div style="margin-top: 30px; color: #666; font-size: 14px;">
             <p>หากมีคำถาม กรุณาติดต่อเจ้าหน้าที่</p>
-            <p>อ้างอิงเลขที่คำสั่งซื้อ: <strong>#{{ $order->id }}</strong></p>
+            <p>อ้างอิงเลขที่คำสั่งซื้อ: <strong>#{{ $order->order_no }}</strong></p>
         </div>
     </div>
 
-    
+
 @endsection
 
 @section('script')
-    <script>
-        // Auto update order status to confirmed for paid orders
-        @if(!$order->is_free)
-        fetch('/admin/order/{{ $order->id }}/confirm', {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        }).catch(() => {});
-        @endif
-    </script>
+
 @endsection

@@ -9,7 +9,7 @@
     {{-- <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" /> --}}
     <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Kanit', Arial, sans-serif; background: #f8f9fa; }
@@ -27,7 +27,7 @@
         .hamburger.active span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
         .cart-link { background: #3498db; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; position: relative; }
         .cart-link:hover { background: #2980b9; }
-        .cart-badge { position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .cart-badge { position: absolute; top: -8px; right: -8px; background: #ff0000; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .header { text-align: center; margin-bottom: 40px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .product { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -37,7 +37,7 @@
         .product h3 a { color: #2c3e50; text-decoration: none; }
         .product h3 a:hover { color: #3498db; }
         .short-desc { color: #666; font-style: italic; margin-bottom: 10px; }
-        .price { font-size: 28px; color: #e74c3c; font-weight: bold; margin: 15px 0; }
+        .price { font-size: 28px; color: #ff0000; font-weight: bold; margin: 15px 0; }
         .free-badge { background: #27ae60; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; margin-left: 10px; }
         .btn { padding: 12px 25px; margin: 10px 5px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; text-align: center; }
         .btn-primary { background: #3498db; color: white; }
@@ -86,7 +86,7 @@
             </a>
         </div>
     </nav>
-    
+
     <div class="container">
         <div class="header">
             <h1>🧪 HIV Self Test Shop</h1>
@@ -115,13 +115,13 @@
                         <span class="free-badge">มีแบบฟรี</span>
                     @endif
                 </div>
-                
+
                 @if($product->is_free_available)
                     <a href="{{ route('questionnaire.show', ['product_id' => $product->id]) }}" class="btn btn-success">
                         🆓 รับฟรี (ต้องตอบแบบสอบถาม)
                     </a>
                 @endif
-                
+
                 <form method="POST" action="{{ route('cart.add') }}" style="display: inline;">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -138,7 +138,7 @@
         function toggleMenu() {
             const hamburger = document.querySelector('.hamburger');
             const navMenu = document.getElementById('navMenu');
-            
+
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
         }
