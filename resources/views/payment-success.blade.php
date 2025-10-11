@@ -67,7 +67,20 @@
             </div>
             <div class="detail-row">
                 <span>สินค้า:</span>
-                <span>{{ $order->product->name }}</span>
+                <div>
+                    @if($order->orderItems && $order->orderItems->count() > 0)
+                        @foreach($order->orderItems as $item)
+                            <div style="font-size: 14px; margin-bottom: 2px;">
+                                {{ $item->product->name }} x{{ $item->quantity }}
+                                @if($item->is_free)
+                                    <span style="color: #27ae60; font-size: 12px;">(Free)</span>
+                                @endif
+                            </div>
+                        @endforeach
+                    @else
+                        {{ $order->product->name ?? 'N/A' }}
+                    @endif
+                </div>
             </div>
             <div class="detail-row">
                 <span>ลูกค้า:</span>

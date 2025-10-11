@@ -12,6 +12,7 @@ class Admin extends Authenticatable
     protected $fillable = [
         'username',
         'email',
+        'password',
         'reset_token',
         'reset_token_expires'
     ];
@@ -22,15 +23,6 @@ class Admin extends Authenticatable
     ];
 
     protected $casts = [
-        'password' => 'hashed',
         'reset_token_expires' => 'datetime'
     ];
-
-    /**
-     * Set the password attribute with proper hashing
-     */
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
 }

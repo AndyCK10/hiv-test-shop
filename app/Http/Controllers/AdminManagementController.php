@@ -12,7 +12,7 @@ class AdminManagementController extends Controller
 {
     public function index()
     {
-        $admins = Admin::orderBy('created_at', 'desc')->get();
+        $admins = Admin::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.admins', compact('admins'));
     }
 
@@ -26,7 +26,7 @@ class AdminManagementController extends Controller
         $request->validate([
             'username' => 'required|string|unique:admins|max:255',
             'email' => 'required|email|unique:admins|max:255',
-            'password' => 'required|string|min:8'
+            'password' => 'required|string|min:8|confirmed'
         ]);
 
         try {

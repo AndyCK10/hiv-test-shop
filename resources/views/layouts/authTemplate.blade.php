@@ -32,7 +32,7 @@
         }
         body { font-family: var(--var-font-family); background: #f8f9fa; }
         .header { background: #2c3e50; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .container { /*max-width: 1200px;*/ margin: 0 auto; padding: 20px; }
         .nav-links { margin-bottom: 20px; }
         .nav-links a { color: #009688; text-decoration: none; margin-right: 15px; }
 
@@ -43,7 +43,7 @@
             padding: 15px 0;
             margin-bottom: 20px;
         }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .nav-container { /*max-width: 1200px;*/ margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
         .nav-menu { display: flex; gap: 30px; }
         .nav-menu a { color: #607D8B; text-decoration: none; font-weight: 500; transition: color 0.3s; }
         .nav-menu a:hover { color: #009688; }
@@ -98,6 +98,9 @@
         input:focus, textarea:focus, select:focus { border-color: #3498db; outline: none; }
         h2 { text-align: center; margin-bottom: 30px; color: #2c3e50; }
         .success { color: #27ae60 }
+        .w-5 {
+            width: 24px;
+        }
         @media (max-width: 768px) {
             .container { padding: 10px; }
             .nav-container { position: relative; }
@@ -113,6 +116,18 @@
             .header h1 { font-size: 24px; }
             input, textarea, select { font-size: 16px; }
             .current-image { max-width: 150px; }
+        }
+
+        /* Pagination styles */
+        .pagination { display: flex; justify-content: center; gap: 5px; margin: 20px 0; }
+        .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #ddd; text-decoration: none; color: #333; border-radius: 4px; }
+        .pagination a:hover { background: #f8f9fa; }
+        .pagination .active span { background: #009688; color: white; border-color: #009688; }
+        .pagination .disabled span { color: #ccc; }
+
+        @media (max-width: 768px) {
+            .pagination { flex-wrap: wrap; gap: 3px; }
+            .pagination a, .pagination span { padding: 6px 10px; font-size: 14px; }
         }
     </style>
 </head>

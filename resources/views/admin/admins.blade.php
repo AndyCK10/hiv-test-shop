@@ -14,10 +14,22 @@
         .btn-danger { background: #ff0000; color: white; }
         .logout { color: white; text-decoration: none; padding: 10px 20px; background: #ff0000; border-radius: 5px; } */
         .admins-table { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; }
+        /* table { width: 100%; border-collapse: collapse; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #34495e; color: white; }
+        th { background: #34495e; color: white; } */
         .success { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        
+        /* Pagination styles */
+        .pagination { display: flex; justify-content: center; gap: 5px; margin: 20px 0; }
+        .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #ddd; text-decoration: none; color: #333; border-radius: 4px; }
+        .pagination a:hover { background: #f8f9fa; }
+        .pagination .active span { background: #009688; color: white; border-color: #009688; }
+        .pagination .disabled span { color: #ccc; }
+
+        @media (max-width: 768px) {
+            .pagination { flex-wrap: wrap; gap: 3px; }
+            .pagination a, .pagination span { padding: 6px 10px; font-size: 14px; }
+        }
     </style>
 @endsection
 
@@ -73,6 +85,13 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination -->
+        @if($admins->hasPages())
+            <div style="margin-top: 20px; text-align: center; font-size: 16px;">
+                {{ $admins->links() }}
+            </div>
+        @endif
     </div>
 
 @endsection

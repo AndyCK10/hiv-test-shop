@@ -40,7 +40,25 @@
         <h3>รายละเอียดคำสั่งซื้อ #{{ $order->order_no }}</h3>
         <div class="order-card">
             <div class="order-header">
-                <h2>{{ $order->product->name }}</h2>
+                <div>
+                    <h2>คำสั่งซื้อ #{{ $order->order_no }}</h2>
+                    @if($order->orderItems && $order->orderItems->count() > 0)
+                        <div style="margin-top: 10px;">
+                            @foreach($order->orderItems as $item)
+                                <div style="font-size: 14px; color: #666; margin-bottom: 5px;">
+                                    {{ $item->product->name }} x{{ $item->quantity }}
+                                    @if($item->is_free)
+                                        <span style="color: #27ae60; font-weight: bold;">(Free)</span>
+                                    @else
+                                        (฿{{ number_format($item->price * $item->quantity) }})
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p style="color: #666; margin-top: 5px;">{{ $order->product->name ?? 'N/A' }}</p>
+                    @endif
+                </div>
                 <span class="status {{ $order->status }}">
                     @if($order->status == 'pending') รอชำระ
                     @elseif($order->status == 'confirmed') ยืนยันแล้ว

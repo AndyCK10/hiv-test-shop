@@ -1,7 +1,19 @@
 @extends('layouts.authTemplate')
 
 @section('css')
+    <style>
+        /* Pagination styles */
+        .pagination { display: flex; justify-content: center; gap: 5px; margin: 20px 0; }
+        .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #ddd; text-decoration: none; color: #333; border-radius: 4px; }
+        .pagination a:hover { background: #f8f9fa; }
+        .pagination .active span { background: #009688; color: white; border-color: #009688; }
+        .pagination .disabled span { color: #ccc; }
 
+        @media (max-width: 768px) {
+            .pagination { flex-wrap: wrap; gap: 3px; }
+            .pagination a, .pagination span { padding: 6px 10px; font-size: 14px; }
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -73,13 +85,13 @@
                 <thead>
                     <tr>
                         <th style="width: 200px;">เลขที่คำสั่งซื้อ</th>
-                        <th>ลูกค้า</th>
-                        <th style="width: 200px;">สินค้า</th>
-                        <th style="width: 200px;">ประเภท</th>
-                        <th style="width: 200px;">ยอดรวม</th>
-                        <th style="width: 200px;">สถานะ</th>
+                        <th style="width: 250px;">ลูกค้า</th>
+                        <th>สินค้า</th>
+                        <th style="width: 150px;">ประเภท</th>
+                        <th style="width: 150px;">ยอดรวม</th>
+                        <th style="width: 150px;">สถานะ</th>
                         <th style="width: 200px;">วันที่</th>
-                        <th style="width: 200px;">จัดการ</th>
+                        <th style="width: 250px;">จัดการ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,7 +102,20 @@
                             <strong>{{ $order->name }}</strong><br>
                             <small>{{ $order->phone }}</small>
                         </td>
-                        <td>{{ $order->product?->name ?? 'N/A' }}</td>
+                        <td>
+                            @if($order->orderItems && $order->orderItems->count() > 0)
+                                @foreach($order->orderItems as $item)
+                                    <div style="font-size: 12px; margin-bottom: 2px;">
+                                        {{ $item->product->name }} x{{ $item->quantity }}
+                                        @if($item->is_free)
+                                            <span style="color: #27ae60; font-size: 10px;">(Free)</span>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            @else
+                                {{ $order->product?->name ?? 'N/A' }}
+                            @endif
+                        </td>
                         <td>
                             @if($order->is_free)
                                 <span class="free-badge">ฟรี</span>
@@ -109,7 +134,7 @@
                         </td>
                         <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                         <td>
-                            <a href="{{ route('admin.order.show', $order->id) }}" class="btn btn-primary">ดู</a>
+                            <a href="{{ route('admin.order.show', $order->id) }}" class="btn btn-primary">รายละเอียด</a>
                             @if($order->status == 'pending')
                                 <a href="{{ route('admin.order.confirm', $order->id) }}" class="btn btn-success">ยืนยัน</a>
                             @endif
@@ -119,6 +144,13 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination -->
+        @if($orders->hasPages())
+            <div style="margin-top: 20px; text-align: center; font-size: 16px;">
+                {{ $orders->appends(request()->query())->links() }}
+            </div>
+        @endif
     </div>
 
 

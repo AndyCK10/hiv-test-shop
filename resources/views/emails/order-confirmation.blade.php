@@ -32,7 +32,21 @@
             
             <div class="order-details">
                 <h3>รายละเอียดคำสั่งซื้อ #{{ $order->id }}</h3>
-                <p><strong>สินค้า:</strong> {{ $order->product->name }}</p>
+                @if($order->orderItems && $order->orderItems->count() > 0)
+                    <p><strong>สินค้า:</strong></p>
+                    @foreach($order->orderItems as $item)
+                        <p style="margin-left: 20px;">
+                            - {{ $item->product->name }} x{{ $item->quantity }}
+                            @if($item->is_free)
+                                <span style="color: #27ae60;">(Free)</span>
+                            @else
+                                (฿{{ number_format($item->price * $item->quantity) }})
+                            @endif
+                        </p>
+                    @endforeach
+                @else
+                    <p><strong>สินค้า:</strong> {{ $order->product->name ?? 'N/A' }}</p>
+                @endif
                 <p><strong>ประเภท:</strong> {{ $order->is_free ? 'สั่งแบบฟรี (จ่ายเฉพาะค่าส่ง)' : 'สั่งซื้อปกติ' }}</p>
                 <p><strong>ยอดรวม:</strong> ฿{{ number_format($order->total_amount) }}</p>
                 <p><strong>สถานะ:</strong> 

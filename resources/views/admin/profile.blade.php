@@ -44,6 +44,22 @@
         @endif
 
         <div class="form-container">
+            <h3>ข้อมูลแอดมิน</h3>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" value="{{ $admin->username }}" readonly style="background: #f8f9fa;">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" value="{{ $admin->email }}" readonly style="background: #f8f9fa;">
+            </div>
+            <div class="form-group">
+                <label>วันที่สร้าง</label>
+                <input type="text" value="{{ $admin->created_at->format('d/m/Y H:i') }}" readonly style="background: #f8f9fa;">
+            </div>
+        </div>
+
+        <div class="form-container">
             <h3>เปลี่ยนรหัสผ่าน</h3>
             <form method="POST" action="{{ route('admin.change-password') }}">
                 @csrf
@@ -62,30 +78,7 @@
                     <input type="password" name="new_password_confirmation" required>
                 </div>
 
-                <button type="submit" class="btn btn-success">🔒 เปลี่ยนรหัสผ่าน</button>
-            </form>
-        </div>
-
-        <div class="form-container">
-            <h3>เพิ่มแอดมินใหม่</h3>
-            <form method="POST" action="{{ route('admin.create-admin') }}">
-                @csrf
-                <div class="form-group">
-                    <label>Username *</label>
-                    <input type="text" name="username" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Email *</label>
-                    <input type="email" name="email" required>
-                </div>
-
-                <div class="form-group">
-                    <label>รหัสผ่าน *</label>
-                    <input type="password" name="password" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary">➕ เพิ่มแอดมิน</button>
+                <button type="submit" class="btn btn-success">เปลี่ยนรหัสผ่าน</button>
             </form>
         </div>
 

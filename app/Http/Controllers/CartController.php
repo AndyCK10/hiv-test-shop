@@ -165,70 +165,57 @@ class CartController extends Controller
             }
             return $item->product->price * $item->quantity;
         });
-
-        // $subtotal = $cartItems->sum(function($item) {
-        //     return $item->is_free ? 0 : ($item->product->price * $item->quantity);
-        // });
-        
         $total = $subtotal + self::SHIPPING_COST;
 
-        // Get saved questionnaire data for free items (single query)
-        // $sessionId = Session::getId();
-        // $questionnaireSession = QuestionnaireSession::where('session_id', $sessionId)
-        //     ->where('expires_at', '>', now())
-        //     ->first();
-
-        // Create orders for each product
-        $orders = [];
-        foreach ($cartItems as $item) {
-            $orderData = [
-                'product_id' => $item->product_id,
-                'name' => ($item->is_free && $questionnaireSession) ? htmlspecialchars($questionnaireSession->name) : htmlspecialchars($request->name),
-                'phone' => ($item->is_free && $questionnaireSession) ? htmlspecialchars($questionnaireSession->phone) : htmlspecialchars($request->phone),
-                'email' => htmlspecialchars($request->email),
-                'address' => htmlspecialchars($request->address),
-                'is_free' => $item->is_free,
-                'total_amount' => $item->is_free ? self::SHIPPING_COST : ($item->product->price * $item->quantity) + self::SHIPPING_COST,
-                // 'status' => $item->is_free ? 'confirmed' : 'pending'
-                'status' => 'pending'
-            ];
-            
-            if ($item->is_free && $questionnaireSession) {
-                $orderData['id_card'] = htmlspecialchars($questionnaireSession->id_card);
-            } elseif ($request->id_card) {
-                $orderData['id_card'] = htmlspecialchars($request->id_card);
-            }
-            
-            $order = Order::create($orderData);
-
-            if ($hasFreeItems && $item->is_free && $questionnaireSession) {
-                \App\Models\Questionnaire::create([
-                    'order_id' => $order->id,
-                    'name' => htmlspecialchars($questionnaireSession->name),
-                    'id_card' => htmlspecialchars($questionnaireSession->id_card),
-                    'phone' => htmlspecialchars($questionnaireSession->phone),
-                    'product_id' => $questionnaireSession->product_id,
-                    'answers' => $questionnaireSession->answers
-                ]);
-            }
-
-            // Send emails for confirmed orders (free orders)
-            if ($order->status === 'confirmed') {
-                $this->sendOrderEmails($order);
-            }
-
-            $orders[] = $order;
+        // Create single order with multiple items
+        $orderData = [
+            'name' => ($hasFreeItems && $questionnaireSession) ? htmlspecialchars($questionnaireSession->name) : htmlspecialchars($request->name),
+            'phone' => ($hasFreeItems && $questionnaireSession) ? htmlspecialchars($questionnaireSession->phone) : htmlspecialchars($request->phone),
+            'email' => htmlspecialchars($request->email),
+            'address' => htmlspecialchars($request->address),
+            'is_free' => $hasFreeItems && $subtotal == 0,
+            'total_amount' => $total,
+            'status' => ($hasFreeItems && $subtotal == 0) ? 'confirmed' : 'pending'
+        ];
+        
+        if ($hasFreeItems && $questionnaireSession) {
+            $orderData['id_card'] = htmlspecialchars($questionnaireSession->id_card);
+        } elseif ($request->id_card) {
+            $orderData['id_card'] = htmlspecialchars($request->id_card);
         }
+        
+        $order = Order::create($orderData);
+
+        // Create order items
+        foreach ($cartItems as $item) {
+            \App\Models\OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'price' => $item->product->price,
+                'is_free' => $item->is_free
+            ]);
+        }
+
+        // Create questionnaire for free items
+        if ($hasFreeItems && $questionnaireSession) {
+            \App\Models\Questionnaire::create([
+                'order_id' => $order->id,
+                'name' => htmlspecialchars($questionnaireSession->name),
+                'id_card' => htmlspecialchars($questionnaireSession->id_card),
+                'phone' => htmlspecialchars($questionnaireSession->phone),
+                'product_id' => $questionnaireSession->product_id,
+                'answers' => $questionnaireSession->answers
+            ]);
+        }
+
+        // Send emails
+        $this->sendOrderEmails($order);
 
         // Clear cart
         CartItem::where('cart_id', $cart->id)->delete();
 
-        $paidOrder = collect($orders)->first();
-        if ($paidOrder) {
-            return redirect()->route('payment', $paidOrder);
-        }
-
-        return redirect()->route('home');
+        return redirect()->route('payment', $order);
     }
 
     private function sendOrderEmails(Order $order)

@@ -59,12 +59,10 @@
                     <input type="password" name="password" {{ !isset($admin) ? 'required' : '' }}>
                 </div>
 
-                @if(isset($admin))
                 <div class="form-group">
-                    <label>ยืนยันรหัสผ่าน</label>
-                    <input type="password" name="password_confirmation">
+                    <label>ยืนยันรหัสผ่าน {{ !isset($admin) ? '*' : '' }}</label>
+                    <input type="password" name="password_confirmation" {{ !isset($admin) ? 'required' : '' }}>
                 </div>
-                @endif
 
                 <div style="text-align: center;">
                     <button type="submit" class="btn btn-primary">

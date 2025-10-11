@@ -122,10 +122,10 @@ class OrderController extends Controller
 
     public function showPayment(Order $order)
     {
-        $order->load('product');
+        $order->load(['product', 'orderItems.product']);
         $cartCount = $this->getCartCount();
 
-        $bank_qr_code = env('BANK_RECEIVER_QR_CODE');
+        $bank_qr_code = env('BANK_RECEIVER_QR_CODE', '0123456789');
 
         return view('payment', compact('order', 'cartCount', 'bank_qr_code'));
     }
@@ -216,7 +216,7 @@ class OrderController extends Controller
         $this->sendOrderEmails($order);
 
         $cartCount = $this->getCartCount();
-        $order->load('product');
+        $order->load(['product', 'orderItems.product']);
         
         return view('payment-success', compact('order', 'cartCount'));
     }

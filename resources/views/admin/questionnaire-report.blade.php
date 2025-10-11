@@ -36,12 +36,21 @@
             padding-left: 1rem;
         }
 
+        /* Pagination styles */
+        .pagination { display: flex; justify-content: center; gap: 5px; margin: 20px 0; }
+        .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #ddd; text-decoration: none; color: #333; border-radius: 4px; }
+        .pagination a:hover { background: #f8f9fa; }
+        .pagination .active span { background: #009688; color: white; border-color: #009688; }
+        .pagination .disabled span { color: #ccc; }
+
         @media (max-width: 768px) {
             .container { padding: 10px; }
             .report-container { padding: 20px; }
             .stats { grid-template-columns: 1fr; }
             table { font-size: 14px; }
             th, td { padding: 8px; }
+            .pagination { flex-wrap: wrap; gap: 3px; }
+            .pagination a, .pagination span { padding: 6px 10px; font-size: 14px; }
         }
     </style>
 @endsection
@@ -64,11 +73,11 @@
                     <div class="stat-label">แบบสอบถามทั้งหมด</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">{{ $questionnaires->where('created_at', '>=', Carbon::now()->subDays(7))->count() }}</div>
+                    <div class="stat-number">{{ $questionnaires->where('created_at', '>=', now()->subDays(7))->count() }}</div>
                     <div class="stat-label">7 วันที่ผ่านมา</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">{{ $questionnaires->where('created_at', '>=', Carbon::now()->subDays(30))->count() }}</div>
+                    <div class="stat-number">{{ $questionnaires->where('created_at', '>=', now()->subDays(30))->count() }}</div>
                     <div class="stat-label">30 วันที่ผ่านมา</div>
                 </div>
             </div>
@@ -139,6 +148,13 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
+            @if($questionnaires->hasPages())
+                <div style="margin-top: 20px; text-align: center; font-size: 16px;">
+                    {{ $questionnaires->appends(request()->query())->links() }}
+                </div>
+            @endif
         </div>
     </div>
 
@@ -158,7 +174,7 @@
 
 @section('script')
     <script>
-        const questionnaires = @json($questionnaires);
+        const questionnaires = @json($questionnaires->items());
 
         function showAnswers(id) {
 

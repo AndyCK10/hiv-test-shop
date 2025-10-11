@@ -62,7 +62,7 @@ class AdminController extends Controller
         $paidOrders = Order::where('is_free', false)->count();
         $totalRevenue = Order::sum('total_amount');
 
-        $query = Order::with('product');
+        $query = Order::with(['product', 'orderItems.product']);
 
         if ($request->filled('search')) {
             $search = htmlspecialchars($request->search);
@@ -104,7 +104,7 @@ class AdminController extends Controller
             abort(404);
         }
         
-        $order = Order::with(['product', 'questionnaire'])->findOrFail($id);
+        $order = Order::with(['product', 'questionnaire', 'orderItems.product'])->findOrFail($id);
         return view('admin.order-detail', compact('order'));
     }
 
@@ -150,7 +150,9 @@ class AdminController extends Controller
 
     public function showProfile()
     {
-        return view('admin.profile');
+        $adminId = Session::get('admin_id');
+        $admin = Admin::findOrFail($adminId);
+        return view('admin.profile', compact('admin'));
     }
 
     public function changePassword(Request $request)

@@ -21,6 +21,11 @@ class Order extends Model
         'payment_slip'
     ];
 
+    protected $casts = [
+        'total_amount' => 'decimal:2',
+        'is_free' => 'boolean'
+    ];
+
     protected static function boot()
     {
         parent::boot();
@@ -47,11 +52,6 @@ class Order extends Model
         });
     }
 
-    protected $casts = [
-        'total_amount' => 'decimal:2',
-        'is_free' => 'boolean'
-    ];
-
     public function product()
     {
         return $this->belongsTo(Product::class);
@@ -60,5 +60,10 @@ class Order extends Model
     public function questionnaire()
     {
         return $this->hasOne(Questionnaire::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

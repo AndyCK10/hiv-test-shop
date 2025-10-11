@@ -50,6 +50,7 @@
         .instructions { background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: left; }
         .back-link { margin-top: 20px; }
         .back-link a { color: #3498db; text-decoration: none; }
+        .icon-copy {width: 18px; cursor: pointer;}
         @media (max-width: 768px) {
             .container { padding: 10px; }
             .payment-container { padding: 20px; }
@@ -69,8 +70,24 @@
 
             <div class="order-summary">
                 <h3>รายละเอียดคำสั่งซื้อ #{{ $order->id }}</h3>
-                <p><strong>สินค้า:</strong> {{ $order->product->name }}</p>
                 <p><strong>ลูกค้า:</strong> {{ $order->name }}</p>
+                @if($order->orderItems && $order->orderItems->count() > 0)
+                    <div style="margin: 10px 0;">
+                        <strong>สินค้า:</strong>
+                        @foreach($order->orderItems as $item)
+                            <div style="margin-left: 10px; font-size: 14px;">
+                                - {{ $item->product->name }} x{{ $item->quantity }} 
+                                @if($item->is_free)
+                                    <span style="color: #27ae60;">(Free)</span>
+                                @else
+                                    (฿{{ number_format($item->price * $item->quantity) }})
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p><strong>สินค้า:</strong> {{ $order->product->name ?? 'N/A' }}</p>
+                @endif
                 <div class="amount">฿{{ number_format($order->total_amount) }}</div>
             </div>
 
@@ -91,19 +108,32 @@
                     <div style="background: white; padding: 15px; border-radius: 8px; text-align: left;">
                         <div style="color: #138f2d; font-weight: bold; margin-bottom: 5px;">ธนาคารกสิกรไทย</div>
                         <div><strong>ชื่อบัญชี:</strong> HIVST</div>
-                        <div style="display: flex; align-items: center; gap: 10px;"><strong>เลขที่บัญชี:</strong> <span style="font-family: monospace; background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">123-4-56789-0</span> <button onclick="copyToClipboard('1234567890')" style="background: #138f2d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋</button></div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <strong>เลขที่บัญชี:</strong> <span style="font-family: monospace; background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">123-4-56789-0</span> 
+                            {{-- <button onclick="copyToClipboard('1234567890')" style="background: #138f2d; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋</button> --}}
+                            <img src="/image/icon/svg_309532.svg" class="icon-copy" alt="" onclick="copyToClipboard('1234567890')">
+                        </div>
                         <div><strong>ประเภท:</strong> ออมทรัพย์</div>
                     </div>
                     <div style="background: white; padding: 15px; border-radius: 8px; text-align: left;">
                         <div style="color: #4e2a84; font-weight: bold; margin-bottom: 5px;">ธนาคารไทยพาณิชย์</div>
                         <div><strong>ชื่อบัญชี:</strong> HIVST</div>
-                        <div style="display: flex; align-items: center; gap: 10px;"><strong>เลขที่บัญชี:</strong> <span style="font-family: monospace; background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">987-6-54321-0</span> <button onclick="copyToClipboard('9876543210')" style="background: #4e2a84; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋</button></div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <strong>เลขที่บัญชี:</strong> 
+                            <span style="font-family: monospace; background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">987-6-54321-0</span> 
+                            {{-- <button onclick="copyToClipboard('9876543210')" style="background: #4e2a84; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋</button> --}}
+                            <img src="/image/icon/svg_309532.svg" class="icon-copy" alt="" onclick="copyToClipboard('9876543210')">
+                        </div>
                         <div><strong>ประเภท:</strong> ออมทรัพย์</div>
                     </div>
                 </div>
                 <div style="text-align: center; margin-top: 15px;">
                     <p><strong>ยอดที่ต้องโอน:</strong> <span style="color: #ff0000; font-size: 20px; font-weight: bold;">฿{{ number_format($order->total_amount) }}</span></p>
-                    <p style="display: flex; align-items: center; justify-content: center; gap: 10px;"><strong>เลขที่คำสั่งซื้อ:</strong> <span style="font-family: monospace; background: #fff3cd; padding: 5px 10px; border-radius: 5px; font-weight: bold;">#{{ $order->id }}</span> <button onclick="copyToClipboard('{{ $order->id }}')" style="background: #ffc107; color: #333; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋</button></p>
+                    <p style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <strong>เลขที่คำสั่งซื้อ:</strong> <span style="padding: 5px 10px; border-radius: 5px; font-weight: bold;">#{{ $order->id }}</span> 
+                        {{-- <button onclick="copyToClipboard('{{ $order->id }}')" style="background: #ffc107; color: #333; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 12px;">📋</button> --}}
+                        <img src="/image/icon/svg_309532.svg" class="icon-copy" alt="" onclick="copyToClipboard('{{ $order->id }}')">
+                    </p>
                 </div>
             </div>
 
